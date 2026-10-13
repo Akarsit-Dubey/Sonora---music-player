@@ -56,9 +56,9 @@ describe('useLibraryStore', () => {
 
   it('prevents deleting editorial playlists while allowing deleting user playlists', () => {
     const store = useLibraryStore.getState();
-    // Default playlist-1 is editorial
-    store.deletePlaylist('playlist-1');
-    expect(useLibraryStore.getState().getPlaylistById('playlist-1')).toBeDefined();
+    // Default playlist-trending-india is editorial
+    store.deletePlaylist('playlist-trending-india');
+    expect(useLibraryStore.getState().getPlaylistById('playlist-trending-india')).toBeDefined();
 
     // User playlist can be deleted
     const userPlId = store.createPlaylist('Temporary Playlist');

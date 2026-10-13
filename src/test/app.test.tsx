@@ -1,8 +1,15 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, within, fireEvent } from '@testing-library/react';
 import { App } from '../App';
+import { safeStorage } from '../utils/storage';
+import { useLyricsStore } from '../store/lyricsStore';
 
 describe('App Integration', () => {
+  beforeEach(() => {
+    safeStorage.clear();
+    useLyricsStore.setState({ isLyricsOpen: false, isLyricsFullscreen: false, customLyrics: {} });
+  });
+
   it('renders SONORA brand wordmark and core navigation items', () => {
     render(<App />);
 
@@ -14,7 +21,7 @@ describe('App Integration', () => {
     expect(screen.getAllByText('Search').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders the persistent bottom player with media controls', () => {
+  it('renders the persistent bottom player with media controls including lyrics button', () => {
     render(<App />);
 
     const player = screen.getByRole('region', { name: /audio player/i });
@@ -26,6 +33,7 @@ describe('App Integration', () => {
     expect(playerQueries.getByRole('button', { name: /^(play|pause)$/i })).toBeDefined();
     expect(playerQueries.getByRole('button', { name: /next track/i })).toBeDefined();
     expect(playerQueries.getByRole('button', { name: /cycle repeat mode/i })).toBeDefined();
+    expect(playerQueries.getByRole('button', { name: /toggle synchronized lyrics/i })).toBeDefined();
     expect(playerQueries.getByRole('button', { name: /toggle playback queue/i })).toBeDefined();
   });
 
@@ -48,17 +56,40 @@ describe('App Integration', () => {
     expect(screen.getByText(/your frequencies/i)).toBeDefined();
   });
 
-  it('performs reactive search filtering', () => {
+  it('performs reactive search filtering for Hindi artists and songs', () => {
     render(<App />);
 
     const searchLinks = screen.getAllByRole('link', { name: /search/i });
     fireEvent.click(searchLinks[0]);
 
     const input = screen.getByPlaceholderText(/search tracks, artists, albums, or genres/i);
-    fireEvent.change(input, { target: { value: 'Cyber' } });
+    fireEvent.change(input, { target: { value: 'Anuv' } });
 
-    // Should find Cyberlink matches across artist and tracks
-    expect(screen.getAllByText(/cyberlink/i).length).toBeGreaterThanOrEqual(1);
+    // Should find Anuv Jain in artist and tracks
+    expect(screen.getAllByText(/anuv jain/i).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('opens and closes the synchronized lyrics modal via bottom player button', () => {
+    render(<App />);
+
+    const player = screen.getByRole('region', { name: /audio player/i });
+    const lyricsBtn = within(player).getByRole('button', { name: /toggle synchronized lyrics/i });
+
+    // Open lyrics
+    fireEvent.click(lyricsBtn);
+
+    const dialog = screen.getByRole('dialog', { name: /synchronized lyrics/i });
+    expect(dialog).toBeDefined();
+
+    // Verify lyrics content is present
+    expect(screen.getByText(/synced/i)).toBeDefined();
+    expect(screen.getByText(/import lrc/i)).toBeDefined();
+
+    // Close lyrics dialog via close button
+    const closeBtn = within(dialog).getByRole('button', { name: /close lyrics/i });
+    fireEvent.click(closeBtn);
+
+    expect(screen.queryByRole('dialog', { name: /synchronized lyrics/i })).toBeNull();
   });
 
   it('opens and closes the keyboard shortcuts modal', () => {

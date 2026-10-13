@@ -158,8 +158,8 @@ export const HomePage: React.FC = () => {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-[#F3F5F7]">Curated Playlists</h3>
-            <p className="text-xs text-[#8F9BAE]">Hand-selected vibes and sonic frequencies</p>
+            <h3 className="text-lg font-bold text-[#F3F5F7]">Curated Hindi Collections</h3>
+            <p className="text-xs text-[#8F9BAE]">Hand-selected vibes from Bollywood, Indie, and Late-Night Lo-Fi</p>
           </div>
           <Link
             to="/discover"
@@ -180,8 +180,8 @@ export const HomePage: React.FC = () => {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-[#F3F5F7]">Recommended Frequency</h3>
-            <p className="text-xs text-[#8F9BAE]">Highest rated releases in the SONORA library</p>
+            <h3 className="text-lg font-bold text-[#F3F5F7]">Trending in India</h3>
+            <p className="text-xs text-[#8F9BAE]">Curated Hindi picks & acoustic frequencies • Updated weekly</p>
           </div>
         </div>
 

@@ -10,6 +10,7 @@ import { CreatePlaylistModal } from '../playlists/CreatePlaylistModal';
 import { EditPlaylistModal } from '../playlists/EditPlaylistModal';
 import { AddToPlaylistModal } from '../playlists/AddToPlaylistModal';
 import { KeyboardShortcutsModal } from '../ui/KeyboardShortcutsModal';
+import { LyricsModal } from '../lyrics/LyricsModal';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { ToastContainer } from '../ui/ToastContainer';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
@@ -63,6 +64,7 @@ export const AppLayout: React.FC = () => {
       <EditPlaylistModal />
       <AddToPlaylistModal />
       <KeyboardShortcutsModal />
+      <LyricsModal />
       <ConfirmDialog
         isOpen={!!deleteConfirmId}
         onClose={() => setDeleteConfirmId(null)}

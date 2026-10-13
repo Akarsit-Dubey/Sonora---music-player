@@ -15,6 +15,11 @@ export interface Track {
   playCount?: number;
   lyrics?: string[];
   description?: string;
+  language?: string;
+  mood?: string;
+  playbackStatus?: 'playable' | 'preview' | 'external_only';
+  externalStreamingUrl?: string;
+  hasSyncedLyrics?: boolean;
 }
 
 export interface Artist {

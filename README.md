@@ -1,56 +1,88 @@
-# SONORA — Find your frequency
+# SONORA V2 — Hindi Music Experience & Synchronized Lyrics
 
-**SONORA** is a premium, high-fidelity music streaming web application designed with an editorial aesthetic, deep charcoal surfaces, and restrained electric-lime accents. It provides an uninterrupted, responsive listening experience with genuine audio playback, local offline-ready audio tracks, persistent state, intuitive queue control, and rich editorial metadata.
+**SONORA** is a premium, high-fidelity music streaming web application designed with an editorial aesthetic, deep charcoal surfaces, and restrained electric-lime accents. SONORA V2 elevates the platform into a curated **Hindi & Indian Indie music experience** with an interactive **Synchronized Lyrics engine**, custom LRC file import, and 100% playable local audio tracks.
+
+> **Tagline**: *"Find your frequency."*
 
 ---
 
-## ✨ Features
+## ✨ What's New in SONORA V2
 
-### 🎧 Audio Playback & Persistent Engine
+### 🎤 1. Synchronized Lyrics Experience
+- **Dedicated Lyrics Button**: A high-visibility `Mic2` toggle in the persistent bottom player (and `Ctrl+L` shortcut) opens an immersive lyrics panel.
+- **Dynamic Backdrop & Ambient Blur**: Features an art-directed backdrop derived from the currently playing album artwork with deep scrim gradients to maintain ultra-crisp legibility.
+- **Real-Time Active Line Synchronization**: Smoothly tracks the exact playback timestamp of the audio engine. The current lyric line is highlighted in electric lime and rendered with high visual weight, while past/future lines fade to lower opacity.
+- **Auto-Scroll with Smart Resumption**: Automatically centers the active line. Users can scroll freely, and clicking any line will re-engage auto-scroll.
+- **Click-to-Seek**: Click any timestamped lyric line to instantly jump playback to that exact second in the track.
+- **Custom LRC File Importer**: Bring your own lyrics! Users can click **Import LRC** to load standard `.lrc` files from disk. Imported lyrics are validated, parsed, and stored permanently in `localStorage` with a `CUSTOM LRC` badge.
+- **Graceful Unavailable State**: Tracks without synchronized lyrics display a polite, informative state with a single-click link to search external verified sources on Google/Genius.
+
+### 🇮🇳 2. Curated Hindi Music Catalogue
+The previous demo collection has been replaced with an authentic 20-track curated Hindi catalog across 6 signature categories:
+1. **Trending Hindi & Bollywood**: *Jo Tum Mere Ho*, *Kesariya*, *Apna Bana Le*, *Chaleya*, *O Maahi*.
+2. **Romantic Hindi Melodies**: *Samjhawan*, *Tum Ho Toh*, *Heeriye*, *Ranjha*, *Phir Aur Kya Chahiye*.
+3. **Indie & Acoustic Soundscapes**: *Husn*, *Arz Kiya Hai*, *Kho Gaye Hum Kahan*, *Finding Her*, *Gehra Hua*.
+4. **Chill, Late-Night & Desi Lo-Fi**: *Baarishein (Midnight Acoustic)*, *Kyun (Late Night Waves)*, *Chhaliya (Desi Lo-Fi Rework)*.
+5. **Bollywood Party & High-Energy**: *Aaj Ki Raat*, *Ilahi*.
+6. **Nostalgic Favorites**: *Mann Mera*, *Agar Tum Saath Ho*.
+
+### 👤 Featured Artists & Sound Architects
+Includes rich profiles, listener metrics, genres, and biographies for 11 iconic artists:
+- **Anuv Jain** (Indie Acoustic, Folk Pop)
+- **Arijit Singh** (Bollywood, Romantic Playback)
+- **Jasleen Royal** (Indie Pop, Acoustic)
+- **Prateek Kuhad** (Indie Folk, Acoustic)
+- **Vishal Mishra** (Sufi, Bollywood Romance)
+- **Shreya Ghoshal** (Classical, Filmi Melody)
+- **Sachin-Jigar** (Electronic Dance, Bollywood)
+- **Kushagra** (Alternative Indie)
+- **Gajendra Verma** (Pop, Heartbreak)
+- **Shashwat Sachdev** (Cinematic Fusion)
+- **B Praak** (Punjabi Soul, Melodrama)
+
+---
+
+## 🎧 Audio Playback & Persistent Engine
+
 - **Headless Audio Engine**: Built around a single, persistent `HTMLAudioElement` that remains mounted and uninterrupted during in-app navigation across all routes.
-- **Full Playback Controls**: Play, pause, scrub/seek, skip to next, return to previous/restart, dynamic volume control with mute toggle, repeat modes (`off`, `all`, `one`), and non-destructive queue shuffling.
-- **Isolated High-Frequency Store**: Audio progress (`timeupdate`) runs in an isolated Zustand store so only the progress seeker and timestamp indicators re-render—keeping the entire page and queue buttery smooth at 60+ FPS.
+- **Verified Local Audio (100% Playable)**: Every single track in the catalog maps to an actual playable audio file bundled directly in `/public/audio/`. Includes 6 custom-synthesized Indian acoustic/Sufi/Desi Lo-Fi tracks with authentic bansuri flute and tabla percussion, alongside studio electronic compositions.
+- **Full Playback Controls**: Play, pause, scrub/seek, skip next, return previous, dynamic volume control with mute toggle, repeat modes (`off`, `all`, `one`), and non-destructive queue shuffling.
+- **Isolated High-Frequency Store**: Audio progress (`timeupdate`) runs in an isolated Zustand store so only progress seekers and timestamp indicators re-render—keeping the entire page and queue buttery smooth at 60+ FPS.
 - **Hardware Media Keys & Lockscreen**: Full integration with the `navigator.mediaSession` API for system media key control, lockscreen metadata, and artwork display.
 - **Autoplay Handling**: Gracefully catches browser autoplay policy blocks and manages loading/buffering states with zero console panics.
 
-### 📚 Curated Library & Legally Usable Audio
-- **14 Verified, Playable Tracks**: Includes 10 original multi-track synthesized WAV compositions across various genres (Synthwave, Lo-Fi, Deep House, Ambient, Cyberpunk, Neo-Soul, Drum & Bass, Downtempo) and 4 extended studio electronic MP3s from the open-source SoundHelix project.
-- **100% Offline Capability**: All audio files are bundled directly in `/public/audio/`, guaranteeing instant playback without network delays, CORS errors, or third-party stream rot.
-- **Deterministic Artwork Fallbacks**: If remote cover art fails to load or the device is offline, an integrated SVG generator creates custom, themed geometric waveforms with artist initials matching the product aesthetic.
+---
 
-### 🧭 Navigation & Core Areas
+## 🧭 Navigation & Core Areas
+
 1. **Sidebar Navigation**:
    - Original SONORA wordmark and geometric sound frequency branding.
    - Quick routes to **Home**, **Discover**, **Search**, **Your Library**, and **Liked Songs**.
    - User playlists list with live count badges and a dedicated **Create Playlist** trigger.
 2. **Home Page**:
    - Dynamic time-of-day greeting (*"Late Night Frequencies"*, *"Good Morning"*, *"Good Evening"*).
-   - Editorial featured album banner with instant playback.
-   - Recently played rotation shelf.
-   - Curated editorial playlists and recommended soundscapes.
-   - Mood & genre discovery portals.
+   - Featured editorial album banner (*Gulaab & Lamhe* by Anuv Jain) with one-click album playback.
+   - "Recently Played" quick rotation shelf.
+   - "Trending in India" curated Hindi picks shelf.
+   - Curated Hindi compilations and mood discovery portals.
 3. **Discover Page**:
-   - Interactive genre filter pills with live track counts.
-   - Featured sound architects (artists) with bios and follower metrics.
+   - Interactive Hindi mood & genre filter pills with live track counts.
+   - Featured artists horizon with round avatars and bios.
    - Notable album releases and curated compilation cards.
 4. **Instant Search**:
    - Reactive search input that filters in real-time across track titles, artists, albums, and genres.
-   - Visual category cards when empty, and clearly formatted multi-category results (Artists, Songs, Albums).
-   - Helpful, zero-clutter empty states with suggested search queries.
+   - Dedicated category tiles when empty, and multi-category results (Artists, Songs, Albums).
 5. **Your Library**:
-   - Unified overview with tabs for **All**, **Playlists**, **Liked & Tracks**, and **Albums**.
+   - Unified overview with tabs for **All**, **Playlists**, **Liked Songs**, and **Albums**.
    - Multi-field sorting by Recently Added, Track Title (A–Z), and Artist Name.
-   - Special **Liked Songs** tile and quick creation actions.
-6. **Custom & Editorial Playlists**:
-   - Editorial headers with cover art, total duration, track count, and curator badges.
-   - Play All and Shuffle Play actions.
-   - Create, edit title/description, add tracks, remove tracks, and delete custom playlists with safe confirmation dialogs.
-7. **Queue Drawer**:
+6. **Queue Drawer**:
    - Slide-out queue overlay showing the currently playing track and upcoming queue.
-   - Jump directly to any upcoming track, remove individual tracks, or clear the queue.
-   - Visual live equalizer bars indicating active playback.
+   - Jump directly to any track, remove tracks, or clear the queue.
 
-### ⌨️ Keyboard Shortcuts
+---
+
+## ⌨️ Keyboard Shortcuts
+
 | Key | Action |
 | --- | --- |
 | `Space` or `K` | Play / Pause |
@@ -62,6 +94,7 @@
 | `M` | Mute / Unmute toggle |
 | `S` | Toggle Shuffle |
 | `R` | Cycle Repeat (`off` → `all` → `one`) |
+| `Ctrl + L` | Toggle Synchronized Lyrics |
 | `Q` | Toggle Play Queue drawer |
 | `?` | Show Keyboard Shortcuts cheat sheet |
 | `Esc` | Close open drawers, modals, and menus |
@@ -89,34 +122,38 @@
    ```
    Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-3. **Run automated tests**:
+3. **Run automated test suite**:
    ```bash
    npm test
    ```
 
-4. **Build for production**:
+4. **Run linter**:
+   ```bash
+   npm run lint
+   ```
+
+5. **Build for production**:
    ```bash
    npm run build
    ```
-   Preview the production build locally:
+
+6. **Preview the production build**:
    ```bash
    npm run preview
    ```
 
 ---
 
-## 🎵 Audio Attribution & Licensing
+## 🧪 Testing & Verification
 
-All audio tracks bundled in this application are legally usable, royalty-free, or open-source:
-1. **Original Synthesized Compositions** (`public/audio/*.wav`):
-   - *Neon Horizon*, *Midnight Chill*, *Solar Drift*, *Celestial Echoes*, *Electric Pulse*, *Velvet Groove*, *Hyper Velocity*, *Prism Light*, *Tokyo Rain*, *Astral Drift*.
-   - Composed and generated for SONORA. Public Domain / CC0 equivalent.
-2. **SoundHelix Studio Sessions** (`public/audio/soundhelix-*.mp3`):
-   - *Odyssey Phase I* (SoundHelix-Song-1)
-   - *Parallel Waves* (SoundHelix-Song-2)
-   - *Equinox Motion* (SoundHelix-Song-3)
-   - *Cascade Spectrum* (SoundHelix-Song-8)
-   - Created by Thomas Schürger via SoundHelix (algorithmic music engine). Licensed under [Creative Commons Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0)](https://creativecommons.org/licenses/by-sa/2.0/).
+The project includes unit and integration tests powered by Vitest and Happy-DOM:
+- **`src/test/lyrics.test.ts`**: Verifies LRC parser accuracy, timestamp conversion, active line indexing, serialization, and `useLyricsStore` actions.
+- **`src/test/app.test.tsx`**: Verifies full application integration, navigation, search filtering for Hindi artists, lyrics modal opening/closing, and shortcut modals.
+- **`src/test/playerStore.test.ts`**: Verifies playback state machine, queue manipulation, repeat modes, and volume control.
+- **`src/test/libraryStore.test.ts`**: Verifies playlist creation, like/unlike toggles, and safe persistence.
+- **`src/test/utils.test.ts`**: Verifies timestamp formatting and SVG artwork generation.
+
+All 32 tests pass cleanly with 0 warnings and 0 errors in linting and TypeScript compilation.
 
 ---
 
@@ -128,8 +165,9 @@ All audio tracks bundled in this application are legally usable, royalty-free, o
 - **Routing**: React Router v7 (`BrowserRouter`, nested layouts, dynamic route params)
 - **State Management**: Zustand v5
   - `playerStore`: Core audio controls, queue ordering, volume, shuffle, repeat
-  - `progressStore`: High-frequency audio playback progress
+  - `progressStore`: High-frequency audio playback progress (`timeupdate`)
+  - `lyricsStore`: Synchronized lyrics modal state, fullscreen toggle, custom LRC file importer
   - `libraryStore`: User playlists, liked tracks, recently played history with `safeStorage`
   - `uiStore`: Toasts, modals, drawer toggles
-- **Persistence**: Safe `localStorage` layer with in-memory fallback for cross-session storage
+- **Persistence**: Safe `localStorage` layer (`safeStorage`) with in-memory fallback for cross-session storage
 - **Icons**: Lucide React

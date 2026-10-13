@@ -18,8 +18,10 @@ import {
   ListMusic,
   AlertCircle,
   Loader2,
+  Mic2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLyricsStore } from '../../store/lyricsStore';
 
 export const BottomPlayer: React.FC = () => {
   const currentTrackId = usePlayerStore((s) => s.currentTrackId);
@@ -28,6 +30,8 @@ export const BottomPlayer: React.FC = () => {
   const playbackError = usePlayerStore((s) => s.playbackError);
   const shuffle = usePlayerStore((s) => s.shuffle);
   const repeatMode = usePlayerStore((s) => s.repeatMode);
+  const isLyricsOpen = useLyricsStore((s) => s.isLyricsOpen);
+  const toggleLyrics = useLyricsStore((s) => s.toggleLyrics);
   const isQueueOpen = usePlayerStore((s) => s.isQueueOpen);
 
   const togglePlay = usePlayerStore((s) => s.togglePlay);
@@ -194,12 +198,30 @@ export const BottomPlayer: React.FC = () => {
         <ProgressBar />
       </div>
 
-      {/* Right: Volume & Queue Toggle */}
-      <div className="hidden sm:flex items-center justify-end gap-3 w-1/4 min-w-[180px] max-w-[280px]">
-        <VolumeControl />
+      {/* Right: Volume, Lyrics & Queue Toggle */}
+      <div className="flex items-center justify-end gap-2 sm:gap-3 w-auto sm:w-1/4 min-w-[120px] sm:min-w-[180px] max-w-[280px]">
+        <div className="hidden sm:block">
+          <VolumeControl />
+        </div>
 
-        <div className="h-4 w-[1px] bg-[#232B3A]" />
+        <div className="hidden sm:block h-4 w-[1px] bg-[#232B3A]" />
 
+        {/* Dedicated Lyrics Button */}
+        <Tooltip content={isLyricsOpen ? 'Close lyrics' : 'Lyrics'} shortcut="Ctrl+L">
+          <button
+            onClick={toggleLyrics}
+            aria-label="Toggle synchronized lyrics"
+            className={`p-2 rounded-full transition-colors cursor-pointer ${
+              isLyricsOpen
+                ? 'text-[#D4FF00] bg-[#1E2738] shadow-[0_0_12px_rgba(212,255,0,0.2)]'
+                : 'text-[#9CA3AF] hover:text-white hover:bg-[#18202D]'
+            }`}
+          >
+            <Mic2 size={18} />
+          </button>
+        </Tooltip>
+
+        {/* Queue Toggle */}
         <Tooltip content={isQueueOpen ? 'Close queue' : 'Open queue'} shortcut="Q">
           <button
             onClick={toggleQueue}

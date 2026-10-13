@@ -223,7 +223,7 @@ export const SearchPage: React.FC = () => {
           </div>
           <h3 className="text-lg font-bold text-white">No results found for "{query}"</h3>
           <p className="text-xs text-[#8F9BAE]">
-            Please check your spelling, or try searching for another artist, track title, or genre like "Synthwave" or "Lo-Fi".
+            Please check your spelling, or try searching for an artist like "Anuv Jain", "Arijit Singh", or genres like "Romantic", "Indie Hindi", or "Lo-Fi".
           </p>
         </div>
       )}

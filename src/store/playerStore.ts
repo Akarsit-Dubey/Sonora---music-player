@@ -59,7 +59,7 @@ interface PlayerStoreState {
   setPlaybackError: (error: string | null) => void;
 }
 
-const DEFAULT_TRACK_ID = TRACKS[0]?.id ?? 'track-1';
+const DEFAULT_TRACK_ID = TRACKS[0]?.id ?? 'hindi-track-1';
 const ALL_TRACK_IDS = TRACKS.map(t => t.id);
 
 export const usePlayerStore = create<PlayerStoreState>((set, get) => ({

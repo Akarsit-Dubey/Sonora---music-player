@@ -55,15 +55,15 @@ export const useLibraryStore = create<LibraryState>((set, get) => {
   }
 
   const storedLikes = loadFromStorage<string[]>(STORAGE_KEYS.LIKED_TRACKS, [
-    'track-1',
-    'track-2',
-    'track-4',
+    'hindi-track-1',
+    'hindi-track-4',
+    'hindi-track-11',
   ]);
 
   const storedRecent = loadFromStorage<string[]>(STORAGE_KEYS.RECENTLY_PLAYED, [
-    'track-1',
-    'track-2',
-    'track-3',
+    'hindi-track-1',
+    'hindi-track-2',
+    'hindi-track-4',
   ]);
 
   return {
