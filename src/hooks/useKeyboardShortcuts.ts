@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { usePlayerStore } from '../store/playerStore';
 import { useProgressStore } from '../store/progressStore';
 import { useUiStore } from '../store/uiStore';
+import { useLyricsStore } from '../store/lyricsStore';
 
 export function useKeyboardShortcuts() {
   useEffect(() => {
@@ -12,8 +13,11 @@ export function useKeyboardShortcuts() {
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable;
 
-      // Handle Escape always (closes modals / queue)
+      // Handle Escape always (closes modals / queue / lyrics)
       if (e.key === 'Escape') {
+        const { isLyricsOpen, setLyricsOpen } = useLyricsStore.getState();
+        if (isLyricsOpen) return setLyricsOpen(false);
+
         const {
           isShortcutsOpen,
           isCreatePlaylistOpen,
@@ -41,6 +45,13 @@ export function useKeyboardShortcuts() {
 
       // If user is currently typing in an input or textarea, DO NOT intercept!
       if (isInput) return;
+
+      // Toggle synchronized lyrics (Ctrl+L or Cmd+L)
+      if ((e.ctrlKey || e.metaKey) && e.code === 'KeyL') {
+        e.preventDefault();
+        useLyricsStore.getState().toggleLyrics();
+        return;
+      }
 
       const playerState = usePlayerStore.getState();
       const progressState = useProgressStore.getState();

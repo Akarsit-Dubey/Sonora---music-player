@@ -13,6 +13,7 @@ const SHORTCUTS = [
   { key: 'M', desc: 'Mute / Unmute' },
   { key: 'S', desc: 'Toggle shuffle mode' },
   { key: 'R', desc: 'Cycle repeat (off / all / one)' },
+  { key: 'Ctrl + L', desc: 'Toggle synchronized lyrics' },
   { key: 'Q', desc: 'Toggle play queue drawer' },
   { key: '?', desc: 'Open keyboard shortcuts dialog' },
   { key: 'Esc', desc: 'Close dialogs, drawer, and overlays' },

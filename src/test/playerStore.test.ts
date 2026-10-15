@@ -119,4 +119,28 @@ describe('usePlayerStore', () => {
     usePlayerStore.getState().clearQueue();
     expect(usePlayerStore.getState().queue).toEqual(['track-2']);
   });
+
+  it('repeats track from beginning when handleTrackEnded is called with repeatMode one', () => {
+    usePlayerStore.setState({
+      currentTrackId: 'track-2',
+      repeatMode: 'one',
+      isPlaying: true,
+    });
+
+    usePlayerStore.getState().handleTrackEnded();
+    expect(usePlayerStore.getState().currentTrackId).toBe('track-2');
+    expect(usePlayerStore.getState().isPlaying).toBe(true);
+  });
+
+  it('allows nextTrack to advance queue even when repeatMode is one', () => {
+    usePlayerStore.setState({
+      currentTrackId: 'track-1',
+      queue: ['track-1', 'track-2', 'track-3'],
+      repeatMode: 'one',
+      isPlaying: true,
+    });
+
+    usePlayerStore.getState().nextTrack();
+    expect(usePlayerStore.getState().currentTrackId).toBe('track-2');
+  });
 });

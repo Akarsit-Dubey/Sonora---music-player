@@ -92,13 +92,28 @@ describe('App Integration', () => {
     expect(screen.queryByRole('dialog', { name: /synchronized lyrics/i })).toBeNull();
   });
 
-  it('opens and closes the keyboard shortcuts modal', () => {
+  it('toggles lyrics with Ctrl+L shortcut and closes with Escape key', () => {
+    render(<App />);
+
+    // Press Ctrl+L to toggle lyrics
+    fireEvent.keyDown(window, { key: 'l', code: 'KeyL', ctrlKey: true });
+
+    expect(screen.getByRole('dialog', { name: /synchronized lyrics/i })).toBeDefined();
+
+    // Press Escape to close lyrics
+    fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
+
+    expect(screen.queryByRole('dialog', { name: /synchronized lyrics/i })).toBeNull();
+  });
+
+  it('opens and closes the keyboard shortcuts modal and displays Ctrl + L', () => {
     render(<App />);
 
     const helpBtn = screen.getByRole('button', { name: /keyboard shortcuts/i });
     fireEvent.click(helpBtn);
 
     expect(screen.getByRole('dialog', { name: /keyboard shortcuts/i })).toBeDefined();
+    expect(screen.getByText('Ctrl + L')).toBeDefined();
 
     // Close button
     const closeBtn = screen.getByRole('button', { name: /close dialog/i });

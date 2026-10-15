@@ -14,6 +14,7 @@ export const AudioEngine: React.FC = () => {
   const nextTrack = usePlayerStore((s) => s.nextTrack);
   const prevTrack = usePlayerStore((s) => s.prevTrack);
   const handleTrackEnded = usePlayerStore((s) => s.handleTrackEnded);
+  const repeatMode = usePlayerStore((s) => s.repeatMode);
   const setBuffering = usePlayerStore((s) => s.setBuffering);
   const setPlaybackError = usePlayerStore((s) => s.setPlaybackError);
   const pause = usePlayerStore((s) => s.pause);
@@ -63,7 +64,16 @@ export const AudioEngine: React.FC = () => {
     };
 
     const onEnded = () => {
-      handleTrackEnded();
+      const mode = usePlayerStore.getState().repeatMode;
+      if (mode === 'one') {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          setCurrentTime(0);
+          audioRef.current.play().catch((err) => console.warn('Repeat play failed:', err));
+        }
+      } else {
+        handleTrackEnded();
+      }
     };
 
     const onError = () => {
@@ -174,6 +184,13 @@ export const AudioEngine: React.FC = () => {
     if (!audio) return;
     audio.volume = isMuted ? 0 : volume;
   }, [volume, isMuted]);
+
+  // Sync HTML5 audio.loop with repeatMode === 'one'
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.loop = repeatMode === 'one';
+  }, [repeatMode]);
 
   // Handle Seek Requests
   useEffect(() => {

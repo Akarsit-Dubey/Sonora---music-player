@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { RepeatMode } from '../types/music';
 import { TRACKS } from '../data/tracks';
+import { useProgressStore } from './progressStore';
 
 // Helper to shuffle array non-mutatively
 function shuffleArray<T>(array: T[]): T[] {
@@ -144,17 +145,11 @@ export const usePlayerStore = create<PlayerStoreState>((set, get) => ({
     const { queue, currentTrackId, repeatMode, history } = get();
     if (!currentTrackId || queue.length === 0) return;
 
-    if (repeatMode === 'one') {
-      // Re-trigger current track
-      set({ isPlaying: true });
-      return;
-    }
-
     const currentIndex = queue.indexOf(currentTrackId);
     let nextIndex = currentIndex + 1;
 
     if (nextIndex >= queue.length) {
-      if (repeatMode === 'all') {
+      if (repeatMode === 'all' || repeatMode === 'one') {
         nextIndex = 0;
       } else {
         // Queue finished
@@ -204,11 +199,9 @@ export const usePlayerStore = create<PlayerStoreState>((set, get) => ({
   handleTrackEnded: () => {
     const { repeatMode } = get();
     if (repeatMode === 'one') {
-      // Repeat current track
-      const { currentTrackId } = get();
-      if (currentTrackId) {
-        set({ isPlaying: true });
-      }
+      // Repeat current track from beginning
+      useProgressStore.getState().requestSeek(0);
+      set({ isPlaying: true, playbackError: null });
     } else {
       get().nextTrack();
     }

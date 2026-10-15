@@ -54,6 +54,43 @@ export const ProgressBar: React.FC = () => {
     window.addEventListener('mouseup', handleMouseUp);
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!barRef.current || duration <= 0) return;
+    const touch = e.touches[0];
+    const rect = barRef.current.getBoundingClientRect();
+    const clickX = touch.clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    const target = ratio * duration;
+
+    setIsScrubbing(true);
+    setScrubTime(target);
+
+    const handleTouchMove = (moveEvent: TouchEvent) => {
+      if (!barRef.current || duration <= 0) return;
+      const moveTouch = moveEvent.touches[0];
+      const r = barRef.current.getBoundingClientRect();
+      const x = moveTouch.clientX - r.left;
+      const rat = Math.max(0, Math.min(1, x / r.width));
+      setScrubTime(rat * duration);
+    };
+
+    const handleTouchEnd = (endEvent: TouchEvent) => {
+      if (barRef.current && duration > 0) {
+        const endTouch = endEvent.changedTouches[0];
+        const r = barRef.current.getBoundingClientRect();
+        const x = endTouch.clientX - r.left;
+        const rat = Math.max(0, Math.min(1, x / r.width));
+        requestSeek(rat * duration);
+      }
+      setIsScrubbing(false);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!barRef.current || duration <= 0) return;
     const rect = barRef.current.getBoundingClientRect();
@@ -76,6 +113,7 @@ export const ProgressBar: React.FC = () => {
       <div
         ref={barRef}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="relative flex-1 h-5 flex items-center cursor-pointer group py-2"

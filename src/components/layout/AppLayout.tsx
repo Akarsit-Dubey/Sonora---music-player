@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { MobileNav } from './MobileNav';
@@ -20,6 +20,9 @@ import { useLibraryStore } from '../../store/libraryStore';
 export const AppLayout: React.FC = () => {
   useKeyboardShortcuts();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const deleteConfirmId = useUiStore((s) => s.deletePlaylistConfirmId);
   const setDeleteConfirmId = useUiStore((s) => s.setDeletePlaylistConfirmId);
   const deletePlaylist = useLibraryStore((s) => s.deletePlaylist);
@@ -27,9 +30,13 @@ export const AppLayout: React.FC = () => {
 
   const handleDeleteConfirm = () => {
     if (deleteConfirmId) {
+      const isViewingDeleted = location.pathname.includes(deleteConfirmId);
       deletePlaylist(deleteConfirmId);
       addToast('Playlist deleted', 'The playlist has been removed from your library.', 'info');
       setDeleteConfirmId(null);
+      if (isViewingDeleted) {
+        navigate('/library');
+      }
     }
   };
 
