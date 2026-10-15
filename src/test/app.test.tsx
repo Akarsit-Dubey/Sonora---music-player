@@ -34,6 +34,7 @@ describe('App Integration', () => {
     expect(playerQueries.getByRole('button', { name: /next track/i })).toBeDefined();
     expect(playerQueries.getByRole('button', { name: /cycle repeat mode/i })).toBeDefined();
     expect(playerQueries.getByRole('button', { name: /toggle synchronized lyrics/i })).toBeDefined();
+    expect(playerQueries.getByRole('button', { name: /sleep timer/i })).toBeDefined();
     expect(playerQueries.getByRole('button', { name: /toggle playback queue/i })).toBeDefined();
   });
 
@@ -120,5 +121,37 @@ describe('App Integration', () => {
     fireEvent.click(closeBtn);
 
     expect(screen.queryByRole('dialog', { name: /keyboard shortcuts/i })).toBeNull();
+  });
+
+  it('opens sleep timer options from bottom player', () => {
+    render(<App />);
+
+    const player = screen.getByRole('region', { name: /audio player/i });
+    const sleepTimerBtn = within(player).getByRole('button', { name: /sleep timer/i });
+
+    fireEvent.click(sleepTimerBtn);
+
+    expect(screen.getByText('15 minutes')).toBeDefined();
+    expect(screen.getByText('30 minutes')).toBeDefined();
+    expect(screen.getByText('End of track')).toBeDefined();
+  });
+
+  it('stores and displays recent searches on the search page', () => {
+    render(<App />);
+
+    const searchLinks = screen.getAllByRole('link', { name: /search/i });
+    fireEvent.click(searchLinks[0]);
+
+    const input = screen.getByPlaceholderText(/search tracks, artists, albums, or genres/i);
+    fireEvent.change(input, { target: { value: 'Arijit' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+
+    // Clear search input
+    const clearBtn = screen.getByRole('button', { name: /clear search query/i });
+    fireEvent.click(clearBtn);
+
+    // Recent search chip should appear
+    expect(screen.getByText('Recent Searches')).toBeDefined();
+    expect(screen.getByText('Arijit')).toBeDefined();
   });
 });

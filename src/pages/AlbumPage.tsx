@@ -3,10 +3,11 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ALBUMS } from '../data/albums';
 import { TRACKS } from '../data/tracks';
 import { usePlayerStore } from '../store/playerStore';
+import { useUiStore } from '../store/uiStore';
 import { TrackTable } from '../components/library/TrackTable';
 import { ArtworkImage } from '../components/ui/ArtworkImage';
 import { Button } from '../components/ui/Button';
-import { Play, Shuffle, Disc, Clock } from 'lucide-react';
+import { Play, Shuffle, Disc, Clock, Share2 } from 'lucide-react';
 import { formatTime } from '../utils/formatTime';
 
 export const AlbumPage: React.FC = () => {
@@ -14,8 +15,23 @@ export const AlbumPage: React.FC = () => {
   const navigate = useNavigate();
   const playTrack = usePlayerStore((s) => s.playTrack);
   const shufflePlay = usePlayerStore((s) => s.shufflePlay);
+  const addToast = useUiStore((s) => s.addToast);
 
   const album = ALBUMS.find((a) => a.id === id);
+
+  const handleShareAlbum = () => {
+    if (!album) return;
+    const url = window.location.href;
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        addToast('Link Copied', `"${album.title}" by ${album.artistName} copied to clipboard.`, 'success');
+      }).catch(() => {
+        addToast('Share Album', `${album.title} by ${album.artistName}`, 'info');
+      });
+    } else {
+      addToast('Share Album', `${album.title} by ${album.artistName}`, 'info');
+    }
+  };
 
   if (!album) {
     return (
@@ -110,6 +126,15 @@ export const AlbumPage: React.FC = () => {
               icon={<Shuffle size={16} />}
             >
               Shuffle
+            </Button>
+
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleShareAlbum}
+              icon={<Share2 size={15} />}
+            >
+              Share
             </Button>
           </div>
         </div>

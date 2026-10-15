@@ -23,12 +23,26 @@ export const VolumeControl: React.FC = () => {
     setVolume(val);
   };
 
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.05 : -0.05;
+    const nextVol = Math.min(1, Math.max(0, effectiveVolume + delta));
+    setVolume(Math.round(nextVol * 100) / 100);
+  };
+
+  const volumePercent = Math.round(effectiveVolume * 100);
+  const tooltipText = isMuted ? 'Unmute' : `Volume: ${volumePercent}%`;
+
   return (
-    <div className="flex items-center gap-2 group">
-      <Tooltip content={isMuted ? 'Unmute' : 'Mute'} shortcut="M">
+    <div
+      onWheel={handleWheel}
+      className="flex items-center gap-2 group relative select-none"
+      title="Scroll mouse wheel over volume to adjust"
+    >
+      <Tooltip content={tooltipText} shortcut="M">
         <button
           onClick={toggleMute}
-          aria-label={isMuted ? 'Unmute volume' : 'Mute volume'}
+          aria-label={isMuted ? 'Unmute volume' : `Mute volume (currently ${volumePercent}%)`}
           className="p-1.5 rounded-full text-[#9CA3AF] hover:text-white hover:bg-[#1A2230] transition-colors cursor-pointer"
         >
           {getVolumeIcon()}
@@ -43,8 +57,8 @@ export const VolumeControl: React.FC = () => {
           step={0.01}
           value={effectiveVolume}
           onChange={handleChange}
-          aria-label="Volume slider"
-          className="w-full h-1 bg-[#252C3B] rounded-full group-hover:h-1.5 transition-all"
+          aria-label={`Volume: ${volumePercent}%`}
+          className="w-full h-1 bg-[#252C3B] rounded-full group-hover:h-1.5 transition-all cursor-pointer"
           style={{
             background: `linear-gradient(to right, #D4FF00 0%, #D4FF00 ${effectiveVolume * 100}%, #252C3B ${effectiveVolume * 100}%, #252C3B 100%)`,
           }}

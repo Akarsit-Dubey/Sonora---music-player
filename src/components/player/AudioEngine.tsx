@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { usePlayerStore } from '../../store/playerStore';
 import { useProgressStore } from '../../store/progressStore';
 import { useLibraryStore } from '../../store/libraryStore';
+import { useSleepTimerStore } from '../../store/sleepTimerStore';
 import { TRACKS } from '../../data/tracks';
 
 export const AudioEngine: React.FC = () => {
@@ -64,6 +65,13 @@ export const AudioEngine: React.FC = () => {
     };
 
     const onEnded = () => {
+      // Check if sleep timer was set for end of current track
+      const { isActive, isEndOfTrack } = useSleepTimerStore.getState();
+      if (isActive && isEndOfTrack) {
+        useSleepTimerStore.getState().handleTrackEndedCheck();
+        return;
+      }
+
       const mode = usePlayerStore.getState().repeatMode;
       if (mode === 'one') {
         if (audioRef.current) {

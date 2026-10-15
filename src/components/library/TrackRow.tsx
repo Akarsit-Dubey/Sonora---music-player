@@ -13,6 +13,7 @@ import {
   PlusCircle,
   ListPlus,
   Radio,
+  Share2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -77,6 +78,21 @@ export const TrackRow: React.FC<TrackRowProps> = ({
     e.stopPropagation();
     setAddToPlaylistTrackId(track.id);
     setIsMenuOpen(false);
+  };
+
+  const handleShareTrack = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMenuOpen(false);
+    const textToCopy = `Listen to "${track.title}" by ${track.artistName} on SONORA: ${window.location.origin}/album/${track.albumId}`;
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        addToast('Copied to clipboard', `"${track.title}" link ready to share.`, 'success');
+      }).catch(() => {
+        addToast('Track Info', `"${track.title}" by ${track.artistName}`, 'info');
+      });
+    } else {
+      addToast('Track Info', `"${track.title}" by ${track.artistName}`, 'info');
+    }
   };
 
   return (
@@ -240,6 +256,14 @@ export const TrackRow: React.FC<TrackRowProps> = ({
               >
                 <Radio size={14} className="text-[#9CA3AF]" />
                 <span>Add to playlist...</span>
+              </button>
+
+              <button
+                onClick={handleShareTrack}
+                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#1E2635] text-left transition-colors cursor-pointer"
+              >
+                <Share2 size={14} className="text-[#9CA3AF]" />
+                <span>Share track</span>
               </button>
 
               {onRemoveFromPlaylist && (

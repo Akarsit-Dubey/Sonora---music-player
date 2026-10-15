@@ -40,6 +40,14 @@ Includes rich profiles, listener metrics, genres, and biographies for 11 iconic 
 - **Shashwat Sachdev** (Cinematic Fusion)
 - **B Praak** (Punjabi Soul, Melodrama)
 
+### 🌟 3. Quality of Life (QoL) Enhancements
+- **Sleep Timer**: Built-in sleep timer with presets (15, 30, 45, 60 min) or automatic pause at the "End of current track", featuring live countdown badge on the moon icon.
+- **Lyrics Text Zoom**: Dedicated font-size control (`Aa 1x`, `1.5x`, `2x`) inside the lyrics viewer to customize readability across all monitor resolutions, saved permanently in storage.
+- **Mouse Wheel Volume Scroll & Percentage Tooltip**: Hover and roll your mouse wheel over the volume bar to smoothly raise/lower volume by 5% increments with live percentage tooltips.
+- **Search History & Recent Searches**: Frequently used search queries and selected genres are remembered in `localStorage` as clickable chips with quick deletion and clear-all controls.
+- **Remaining Queue Duration**: Instant overview of upcoming tracks count and total remaining playback time in the queue drawer.
+- **Universal Share Action**: Share tracks, albums, and playlists with one-click clipboard copying and toast notifications.
+
 ---
 
 ## 🎧 Audio Playback & Persistent Engine

@@ -22,6 +22,11 @@ export const QueueDrawer: React.FC = () => {
   const currentQueueIndex = currentTrackId ? queue.indexOf(currentTrackId) : -1;
   const upcomingQueue = currentQueueIndex >= 0 ? queue.slice(currentQueueIndex + 1) : queue;
 
+  const upcomingTracks = upcomingQueue
+    .map((tid) => TRACKS.find((t) => t.id === tid))
+    .filter((t): t is typeof TRACKS[0] => t !== undefined);
+  const totalUpcomingDuration = upcomingTracks.reduce((acc, t) => acc + t.duration, 0);
+
   return (
     <div
       role="region"
@@ -106,9 +111,16 @@ export const QueueDrawer: React.FC = () => {
 
         {/* Next Up List */}
         <div>
-          <span className="text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-wider px-2 block mb-2">
-            Next in Queue ({upcomingQueue.length})
-          </span>
+          <div className="flex items-center justify-between px-2 mb-2">
+            <span className="text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-wider">
+              Next in Queue ({upcomingQueue.length})
+            </span>
+            {upcomingQueue.length > 0 && (
+              <span className="text-[11px] font-mono text-[#D4FF00]/80">
+                {formatTime(totalUpcomingDuration)} remaining
+              </span>
+            )}
+          </div>
 
           {upcomingQueue.length === 0 ? (
             <div className="text-center py-8 text-[#6B7280] text-xs">

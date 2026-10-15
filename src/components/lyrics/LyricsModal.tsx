@@ -5,6 +5,7 @@ import { useProgressStore } from '../../store/progressStore';
 import { TRACKS } from '../../data/tracks';
 import { getActiveLyricIndex } from '../../utils/lrcParser';
 import { formatTime } from '../../utils/formatTime';
+import { safeStorage } from '../../utils/storage';
 import { ArtworkImage } from '../ui/ArtworkImage';
 import { Button } from '../ui/Button';
 import {
@@ -42,6 +43,25 @@ export const LyricsModal: React.FC = () => {
 
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const [importStatus, setImportStatus] = useState<string | null>(null);
+
+  type LyricsFontSize = 'normal' | 'large' | 'huge';
+  const [fontSize, setFontSize] = useState<LyricsFontSize>(() => {
+    return (safeStorage.getItem('sonora_lyrics_font_size') as LyricsFontSize) || 'large';
+  });
+
+  const cycleFontSize = () => {
+    const next: LyricsFontSize =
+      fontSize === 'normal' ? 'large' : fontSize === 'large' ? 'huge' : 'normal';
+    setFontSize(next);
+    safeStorage.setItem('sonora_lyrics_font_size', next);
+  };
+
+  const fontSizeClasses =
+    fontSize === 'normal'
+      ? 'text-lg sm:text-xl md:text-2xl'
+      : fontSize === 'large'
+      ? 'text-xl sm:text-2xl md:text-3xl'
+      : 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl';
 
   // Active line index based on high-precision playback position
   const activeIndex = lyricsData?.lines
@@ -185,6 +205,16 @@ export const LyricsModal: React.FC = () => {
             </Button>
           )}
 
+          {/* Font Size cycle button */}
+          <button
+            onClick={cycleFontSize}
+            title={`Font size: ${fontSize.toUpperCase()} (Click to toggle)`}
+            aria-label={`Cycle lyrics font size, currently ${fontSize}`}
+            className="px-2.5 py-1 rounded-full text-xs font-mono font-medium text-[#9CA3AF] hover:text-[#D4FF00] hover:bg-[#1C2534] transition-colors cursor-pointer border border-[#232F42]"
+          >
+            <span className="text-[10px]">Aa</span> {fontSize === 'normal' ? '1x' : fontSize === 'large' ? '1.5x' : '2x'}
+          </button>
+
           {/* Fullscreen toggle */}
           <button
             onClick={toggleFullscreen}
@@ -247,7 +277,7 @@ export const LyricsModal: React.FC = () => {
                       {formatTime(line.time)}
                     </span>
 
-                    <p className="text-xl sm:text-2xl md:text-3xl leading-relaxed tracking-tight">
+                    <p className={`${fontSizeClasses} leading-relaxed tracking-tight`}>
                       {line.text}
                     </p>
 

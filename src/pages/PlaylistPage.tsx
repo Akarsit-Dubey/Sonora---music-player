@@ -7,7 +7,7 @@ import { TRACKS } from '../data/tracks';
 import { TrackTable } from '../components/library/TrackTable';
 import { ArtworkImage } from '../components/ui/ArtworkImage';
 import { Button } from '../components/ui/Button';
-import { Play, Shuffle, Edit3, Trash2, Clock, ListMusic } from 'lucide-react';
+import { Play, Shuffle, Edit3, Trash2, Clock, ListMusic, Share2 } from 'lucide-react';
 import { formatTime } from '../utils/formatTime';
 
 export const PlaylistPage: React.FC = () => {
@@ -21,8 +21,23 @@ export const PlaylistPage: React.FC = () => {
 
   const setEditingId = useUiStore((s) => s.setEditingPlaylistId);
   const setDeleteConfirmId = useUiStore((s) => s.setDeletePlaylistConfirmId);
+  const addToast = useUiStore((s) => s.addToast);
 
   const playlist = id ? getPlaylistById(id) : undefined;
+
+  const handleSharePlaylist = () => {
+    if (!playlist) return;
+    const url = window.location.href;
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        addToast('Link Copied', `"${playlist.title}" link copied to clipboard.`, 'success');
+      }).catch(() => {
+        addToast('Share Playlist', playlist.title, 'info');
+      });
+    } else {
+      addToast('Share Playlist', playlist.title, 'info');
+    }
+  };
 
   if (!playlist) {
     return (
@@ -120,6 +135,15 @@ export const PlaylistPage: React.FC = () => {
               icon={<Shuffle size={16} />}
             >
               Shuffle
+            </Button>
+
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleSharePlaylist}
+              icon={<Share2 size={15} />}
+            >
+              Share
             </Button>
 
             {playlist.isUserCreated && (

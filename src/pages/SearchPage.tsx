@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { TRACKS } from '../data/tracks';
 import { ARTISTS } from '../data/artists';
@@ -6,11 +6,45 @@ import { ALBUMS } from '../data/albums';
 import { GENRES } from '../data/genres';
 import { TrackTable } from '../components/library/TrackTable';
 import { ArtworkImage } from '../components/ui/ArtworkImage';
-import { Search as SearchIcon, X, Music, Users, Disc, Radio } from 'lucide-react';
+import { Search as SearchIcon, X, Music, Users, Disc, Radio, Clock } from 'lucide-react';
+import { safeStorage } from '../utils/storage';
 
 export const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || searchParams.get('genre') || '';
+
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    try {
+      const raw = safeStorage.getItem('sonora_recent_searches');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const saveRecentSearch = (term: string) => {
+    const clean = term.trim();
+    if (!clean) return;
+    setRecentSearches((prev) => {
+      const filtered = prev.filter((t) => t.toLowerCase() !== clean.toLowerCase());
+      const updated = [clean, ...filtered].slice(0, 6);
+      safeStorage.setItem('sonora_recent_searches', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const removeRecentSearch = (term: string) => {
+    setRecentSearches((prev) => {
+      const updated = prev.filter((t) => t.toLowerCase() !== term.toLowerCase());
+      safeStorage.setItem('sonora_recent_searches', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    safeStorage.setItem('sonora_recent_searches', JSON.stringify([]));
+  };
 
   const handleQueryChange = (val: string) => {
     if (val.trim()) {
@@ -18,6 +52,11 @@ export const SearchPage: React.FC = () => {
     } else {
       setSearchParams({});
     }
+  };
+
+  const handleSelectRecentOrGenre = (val: string) => {
+    saveRecentSearch(val);
+    handleQueryChange(val);
   };
 
   const handleClear = () => {
@@ -68,7 +107,13 @@ export const SearchPage: React.FC = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto animate-in fade-in duration-300">
       {/* Prominent Search Input Header */}
-      <div className="relative max-w-2xl">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (query.trim()) saveRecentSearch(query);
+        }}
+        className="relative max-w-2xl"
+      >
         <div className="relative flex items-center">
           <SearchIcon
             size={20}
@@ -78,12 +123,18 @@ export const SearchPage: React.FC = () => {
             type="text"
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && query.trim()) {
+                saveRecentSearch(query);
+              }
+            }}
             placeholder="Search tracks, artists, albums, or genres..."
             autoFocus
             className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-[#141820] border border-[#232D3F] text-base text-[#F3F5F7] placeholder-[#636C7E] focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[#D4FF00]/20 shadow-xl transition-all"
           />
           {query && (
             <button
+              type="button"
               onClick={handleClear}
               aria-label="Clear search query"
               className="absolute right-3.5 p-1 rounded-full text-[#9CA3AF] hover:text-white hover:bg-[#1E2738] transition-colors cursor-pointer"
@@ -92,25 +143,65 @@ export const SearchPage: React.FC = () => {
             </button>
           )}
         </div>
-      </div>
+      </form>
 
-      {/* When query is empty: Browse Genres & Categories */}
+      {/* When query is empty: Recent Searches & Browse Categories */}
       {!trimmed && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-bold text-[#F3F5F7] mb-1">
-              Browse All Categories
-            </h2>
-            <p className="text-xs text-[#8F9BAE]">
-              Jump directly into curated genre channels
-            </p>
-          </div>
+        <div className="space-y-8">
+          {recentSearches.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xs font-semibold text-[#8F9BAE] uppercase tracking-wider flex items-center gap-1.5">
+                  <Clock size={14} className="text-[#D4FF00]" /> Recent Searches
+                </h2>
+                <button
+                  onClick={clearRecentSearches}
+                  className="text-xs text-[#9CA3AF] hover:text-white hover:underline cursor-pointer"
+                >
+                  Clear all
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {recentSearches.map((term) => (
+                  <span
+                    key={term}
+                    onClick={() => handleSelectRecentOrGenre(term)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#131720] hover:bg-[#1C2534] border border-[#222C3C] text-xs font-medium text-[#E2E8F0] hover:text-[#D4FF00] transition-colors cursor-pointer group"
+                  >
+                    <span>{term}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeRecentSearch(term);
+                      }}
+                      aria-label={`Remove recent search ${term}`}
+                      className="p-0.5 rounded-full text-[#6B7280] hover:text-white transition-colors cursor-pointer"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-lg font-bold text-[#F3F5F7] mb-1">
+                Browse All Categories
+              </h2>
+              <p className="text-xs text-[#8F9BAE]">
+                Jump directly into curated genre channels
+              </p>
+            </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {GENRES.map((g) => (
               <button
                 key={g.id}
-                onClick={() => handleQueryChange(g.name)}
+                onClick={() => handleSelectRecentOrGenre(g.name)}
                 className={`p-5 rounded-2xl bg-gradient-to-br ${g.gradient} border text-left hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-lg`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -124,7 +215,8 @@ export const SearchPage: React.FC = () => {
             ))}
           </div>
         </div>
-      )}
+      </div>
+    )}
 
       {/* When query has results */}
       {trimmed && searchResults.hasResults && (

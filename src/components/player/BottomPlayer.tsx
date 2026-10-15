@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLyricsStore } from '../../store/lyricsStore';
+import { SleepTimerButton } from './SleepTimerButton';
 
 export const BottomPlayer: React.FC = () => {
   const currentTrackId = usePlayerStore((s) => s.currentTrackId);
@@ -220,6 +221,9 @@ export const BottomPlayer: React.FC = () => {
             <Mic2 size={18} />
           </button>
         </Tooltip>
+
+        {/* Sleep Timer */}
+        <SleepTimerButton />
 
         {/* Queue Toggle */}
         <Tooltip content={isQueueOpen ? 'Close queue' : 'Open queue'} shortcut="Q">
