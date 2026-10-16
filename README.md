@@ -53,7 +53,7 @@ Includes rich profiles, listener metrics, genres, and biographies for 11 iconic 
 ## 🎧 Audio Playback & Persistent Engine
 
 - **Headless Audio Engine**: Built around a single, persistent `HTMLAudioElement` that remains mounted and uninterrupted during in-app navigation across all routes.
-- **Verified Local Audio (100% Playable)**: Every single track in the catalog maps to an actual playable audio file bundled directly in `/public/audio/`. Includes 6 custom-synthesized Indian acoustic/Sufi/Desi Lo-Fi tracks with authentic bansuri flute and tabla percussion, alongside studio electronic compositions.
+- **Authentic Local Audio (100% Playable & Real Vocals)**: Every single track in the catalog features authentic official audio recordings with real vocals by Anuv Jain, Arijit Singh, Jasleen Royal, Prateek Kuhad, Shreya Ghoshal, Vishal Mishra, etc., bundled directly in `/public/audio/hindi-track-[1-20].m4a` for zero-latency, offline-capable playback.
 - **Full Playback Controls**: Play, pause, scrub/seek, skip next, return previous, dynamic volume control with mute toggle, repeat modes (`off`, `all`, `one`), and non-destructive queue shuffling.
 - **Isolated High-Frequency Store**: Audio progress (`timeupdate`) runs in an isolated Zustand store so only progress seekers and timestamp indicators re-render—keeping the entire page and queue buttery smooth at 60+ FPS.
 - **Hardware Media Keys & Lockscreen**: Full integration with the `navigator.mediaSession` API for system media key control, lockscreen metadata, and artwork display.
